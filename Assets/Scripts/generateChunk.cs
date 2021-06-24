@@ -4,9 +4,9 @@ using UnityEngine;
 using System;
 
 public enum Biome { 
-    FOREST_THIN, FOREST_THICK, FOREST_PLAINS,
-    CAVE_A, CAVE_B,
-    SKY_A
+    FOREST_THIN, 
+    FOREST_THICK, 
+    FOREST_PLAINS
 }
 
 
@@ -39,12 +39,16 @@ public class generateChunk : MonoBehaviour
     private int chance_tree;
     private int tree_max_height;
 
+    //1 block holes
+    private int holes; //no of tiles to go through and add 1 block holes to - e.g. if its 7, (o = block, x = hole) oxxoxoo
+
     // Start is called before the first frame update
     void Start()
     {
         rand = new System.Random(seed);//!!!!!!!!!!!
-        int biomeChoice = rand.Next(3);
-        //int biomeChoice = 1;
+        //int biomeChoice = rand.Next(3);
+        //Debug.Log(biomeChoice);
+        int biomeChoice = 1;
         genChunks = FindObjectOfType<generateChunks>();
 
         //Picking out of 3 possible surface biomes
@@ -102,39 +106,69 @@ public class generateChunk : MonoBehaviour
 
             h = Mathf.RoundToInt(Mathf.PerlinNoise(seed, (i + transform.position.x * 0.5f) / smoothness) * heightMultiplier) + offset + heightAddition;
 
-            if (chunkBiome == Biome.FOREST_THICK){
-                h += 1;
+            //HOLES
+            //Determines if the next few blocks along will have the chance for 1 block holes
+            if (rand.Next(32) == 0){
+                holes = rand.Next(4,8);
             }
 
-            for (int j = -64; j < h; j++){
-                GameObject selectedTile;
-                if (j < h - 1){
-                    selectedTile = DirtTile;
-                }
-                else { 
-                    if (chunkBiome == Biome.FOREST_THICK){
-                        selectedTile = GrassDarkTile;
-                    }
-                    else {
-                        selectedTile = GrassTile;
-                    }
-
-                    if (rand.Next(chance_tree) == 1){
-                        makeTree(i, j, tree_max_height);
-                    }
-                }
-                GameObject newTile = Instantiate(selectedTile, new Vector3(i, j), Quaternion.identity);
-                newTile.transform.parent = this.gameObject.transform;
-                newTile.transform.localPosition = new Vector3(i, j);
+            //If holes need to be placed
+            if (holes > 0){
+                if (rand.Next(1) == 0){
+                    h--;
+                    holes--;
+                }   
             }
+
+            fillBlocks(chunkBiome, rand, i); //Biome Enum, random number generator, how far along in the chunk it is
+
+            //Move the height up again, because it just decreased the height to make a hole, need to put the height up again 
+            if (holes >= 0){
+                h++;
+            }
+
             genChunks.oldHeight = h;
         }
 
-        
         Debug.Log("oldHeightAfter: " + genChunks.oldHeight);
         Debug.Log("");
         Debug.Log("");
         Debug.Log("");
+    }
+
+    /*
+     * Used for 
+     * 
+     * 
+     */
+    private void fillBlocks(Biome chunkBiome, System.Random rand, int i){  //Biome Enum, random number generator, how far along in the chunk it is
+        for (int j = -64; j < h; j++)
+        {
+            GameObject selectedTile;
+            if (j < h - 1)
+            {
+                selectedTile = DirtTile;
+            }
+            else
+            {
+                if (chunkBiome == Biome.FOREST_THICK)
+                {
+                    selectedTile = GrassDarkTile;
+                }
+                else
+                {
+                    selectedTile = GrassTile;
+                }
+
+                if (rand.Next(chance_tree) == 1)
+                {
+                    makeTree(i, j, tree_max_height);
+                }
+            }
+            GameObject newTile = Instantiate(selectedTile, new Vector3(i, j), Quaternion.identity);
+            newTile.transform.parent = this.gameObject.transform;
+            newTile.transform.localPosition = new Vector3(i, j);
+        }
     }
 
     private void makeTree(int i, int j, int tree_max_height){
