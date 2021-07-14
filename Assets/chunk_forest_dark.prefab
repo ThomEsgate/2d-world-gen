@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5066765991085123339
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 729100265462609946}
+  - component: {fileID: 6394154405848677742}
+  m_Layer: 0
+  m_Name: chunk_forest_dark
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &729100265462609946
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5066765991085123339}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.360638, y: 11.007503, z: -68.29537}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6394154405848677742
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5066765991085123339}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1da51863d01cb947b7679ad9263c495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 32
+  seed: 0
+  heightAddition: 0
+  oldHeight: 0
+  heightMultiplier: 64
+  smoothness: 24
+  h: 0
+  chunkBiome: 0
+  chunkID: 0
+  isDark: 0
+  DirtTile: {fileID: 5421793293057310939, guid: 8fc16517785014246a25d629fd1e9dfc, type: 3}
+  GrassTile: {fileID: 805650426701461175, guid: 25c8a3ecae5a7c54195cd63fca9c42e0, type: 3}
+  StoneTile: {fileID: 536037059632201282, guid: 80289be4f3bdb4f40adce0cb6649c5f1, type: 3}
+  WoodTile: {fileID: 3428297895035794225, guid: da51cb9a4d349b947873422000e5b475, type: 3}
+  SandTile: {fileID: 6014434187639819101, guid: 0ec2177d68e328f4aa88d80cedc31d5e, type: 3}
