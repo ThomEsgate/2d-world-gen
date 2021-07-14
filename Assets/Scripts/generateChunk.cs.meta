@@ -3,7 +3,13 @@ guid: e1da51863d01cb947b7679ad9263c495
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - DirtTile: {fileID: 5421793293057310939, guid: 8fc16517785014246a25d629fd1e9dfc, type: 3}
+  - GrassTile: {fileID: 6541835487554452685, guid: ca4b615ca4393234390396444c7a41be, type: 3}
+  - GrassDarkTile: {fileID: 805650426701461175, guid: 25c8a3ecae5a7c54195cd63fca9c42e0, type: 3}
+  - StoneTile: {fileID: 536037059632201282, guid: 80289be4f3bdb4f40adce0cb6649c5f1, type: 3}
+  - WoodTile: {instanceID: 0}
+  - SandTile: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
