@@ -2,17 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block : MonoBehaviour
+public class Block
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public static char block_char;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public static GameObject block_object;
+
 }

@@ -26,7 +26,7 @@ public class generateChunk : MonoBehaviour
     //Variables needed in every chunk type
     private generateChunks genChunks;
 
-    public int width;
+    public int width; //Width of chunk
     public int seed;
     public int heightAddition;
     public int oldHeight;
@@ -128,28 +128,39 @@ public class generateChunk : MonoBehaviour
                 heightMultiplier = 32;
             }
         }
+        
         Generate();
+        //genChunks.WriteWorldDataToFile();
     }
 
     
     public void Generate(){ 
         int offset = 0;
+
         for (int i = 0; i < width; i++){
-            
+            //Debug.Log("oldHeight @ beginning: " + genChunks.oldHeight);
             //Stop problem of chunks in different biomes being at the wrong heights, so add an offset (bodge!??)
             if (i == 0) {
-                h = Mathf.RoundToInt(Mathf.PerlinNoise(seed, (i + transform.position.x * 0.5f) / smoothness) * heightMultiplier) + offset + heightAddition;
+                h = Mathf.RoundToInt(Mathf.PerlinNoise(seed, (i + transform.position.x * 0.5f) / smoothness) * heightMultiplier) + offset  + heightAddition;
  
                 if (genChunks.oldHeight == -999){
+                    //Debug.LogWarning("Offset is set to 0, should be the first block.");
                     offset = 0;
                 }
                 else{
-                    offset = genChunks.oldHeight - h;
+                    //Debug.LogWarning("Calculating offset...");
+                    //Debug.Log(genChunks.oldHeight);
+                    //Debug.Log(h+ 128);
+                    offset = genChunks.oldHeight - h - heightAddition;
+                    //Debug.Log("offset = " + offset);
                 }
             }
 
             h = Mathf.RoundToInt(Mathf.PerlinNoise(seed, (i + transform.position.x * 0.5f) / smoothness) * heightMultiplier) + offset + heightAddition;
 
+            h = h + 128;
+            
+            //Debug.Log("Height currently: " + h);
             //HOLES
             //Determines if the next few blocks along will have the chance for 1 block holes
             if (rand.Next(32) == 0){
@@ -159,6 +170,7 @@ public class generateChunk : MonoBehaviour
             //If holes need to be placed
             if (holes > 0){
                 if (rand.Next(1) == 0){
+                    Debug.Log("Placing hole...");
                     h--;
                     holes--;
                 }   
@@ -171,9 +183,17 @@ public class generateChunk : MonoBehaviour
                 h++;
             }
 
+            
             genChunks.oldHeight = h;
+            //Debug.Log("oldHeight currently: " + genChunks.oldHeight);
         }
 
+        Debug.Log("********************** chunk" + chunkID);
+        Debug.Log("********************** total num" + genChunks.numChunksTotal);
+
+        if (chunkID == genChunks.numChunksTotal - 1){
+            genChunks.WriteWorldDataToFile();
+        }
         //Debug.Log("oldHeightAfter: " + genChunks.oldHeight);
         //Debug.Log("");
         //Debug.Log("");
@@ -186,26 +206,48 @@ public class generateChunk : MonoBehaviour
      * @params: Biome Enum, random number generator, how far along in the chunk it is 
      * 
      */
-    private void fillBlocks(Biome chunkBiome, System.Random rand, int i){  
-        for (int j = -64; j < h; j++)
+    private void fillBlocks(Biome chunkBiome, System.Random rand, int i){
+        //Debug.Log(genChunks.oldHeight);
+
+        GameObject selectedTile;
+
+        
+
+        for (int j = h-1; j > 64; j--) //j > height_of_end_of_dirt_layer
         {
-            GameObject selectedTile;
+            
             if (j >= h - 1){ //ON surface
                 selectedTile = GrassTile;
+                genChunks.writeBlock('g', i + chunkID * width, j);
 
                 if (rand.Next(chance_tree) == 1){
                     genChunks.makeTree(i + chunkID * width, j, tree_max_height, WoodTile);
                 }
-                
             }
 
             else{
                 selectedTile = DirtTile;
+                genChunks.writeBlock('d', i + chunkID * width, j);
             }
+            
+            //Placing block object
             GameObject newTile = Instantiate(selectedTile, new Vector3(i, j), Quaternion.identity);
             newTile.transform.parent = this.gameObject.transform;
             newTile.transform.localPosition = new Vector3(i, j);
+
+            //Debug.Log( "WRITING TO THESE COORDS: + " + (i + chunkID * width) + " " + j);
+
         }
+
+        for (int k = 0; k < genChunks.WORLD_HEIGHT - h; k++) //Air blocks
+        {
+            genChunks.writeBlock('.', i + chunkID * width, k + h);
+            //selectedTile = WoodTile;
+            //GameObject newTile = Instantiate(selectedTile, new Vector3(i, k + h), Quaternion.identity);
+            //newTile.transform.parent = this.gameObject.transform;
+            //newTile.transform.localPosition = new Vector3(i, k + h);
+        }
+
     }
 
     
